@@ -1,0 +1,8 @@
+# python >= 3.10
+scikit-learn
+pandas
+numpy
+opencv-python
+joblib
+matplotlib
+torch
