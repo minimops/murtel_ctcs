@@ -1,6 +1,8 @@
 import os
 import cv2
 import argparse
+
+import joblib
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from features import extract_features
@@ -52,13 +54,14 @@ def parse_time_from_filename(filename):
     return season, time_of_day
 
 
-def extract_and_save_all_features(csv_file, img_dir, output_path):
+def extract_and_save_all_features(csv_file, img_dir, output_path, model_scaler=None):
     """
-    Reads a CSV file referencing ALL labeled images, extracts features for each image,
+    Reads a CSV file referencing labeled images, extracts features for each image,
     and saves a single all-encompassing feature CSV.
     """
     df = pd.read_csv(csv_file)
-    df = to_binary_labels(df)
+    if "tag" in df.columns:
+        df = to_binary_labels(df)
 
     features_list = []
     for _, row in df.iterrows():
@@ -75,13 +78,36 @@ def extract_and_save_all_features(csv_file, img_dir, output_path):
             feats["season"] = season
             feats["time_of_day"] = time_of_day
             feats["image"] = filename
-            feats["binary_tag"] = row["binary_tag"]
+            if "binary_tag" in row.keys():
+                feats["binary_tag"] = row["binary_tag"]
             features_list.append(feats)
 
     features_df = pd.DataFrame(features_list)
 
     # one-hot encode
     features_df = pd.get_dummies(features_df, columns=["season", "time_of_day"])
+
+    # ensure all one-hot columns appear, even if they're missing from the current data
+    all_seasons = ["season_Winter", "season_Spring", "season_Summer", "season_Fall"]
+    all_times = [
+        "time_of_day_Morning",
+        "time_of_day_Afternoon",
+        "time_of_day_Evening",
+        "time_of_day_Night",
+    ]
+    expected_one_hot_cols = all_seasons + all_times
+
+    for col in expected_one_hot_cols:
+        if col not in features_df.columns:
+            features_df[col] = 0
+
+    # reorder
+    meta_cols = features_df.columns[-8:].tolist()
+    meta_cols.sort()
+    other_cols = features_df.columns[:-8].tolist()
+    col_order = other_cols + meta_cols
+    features_df = features_df[col_order]
+
 
     # scale numeric columns except:
     #   - 'binary_tag', 'image'
@@ -90,11 +116,18 @@ def extract_and_save_all_features(csv_file, img_dir, output_path):
     exclude_cols += [c for c in features_df.columns if c.startswith("season_") or c.startswith("time_of_day_")]
     numeric_cols = [c for c in features_df.columns if c not in exclude_cols]
 
-    scaler = StandardScaler()
-    features_df[numeric_cols] = scaler.fit_transform(features_df[numeric_cols])
+    # TODO prob better with pipelines
+    if model_scaler:
+        scaler = model_scaler
+        features_df[numeric_cols] = scaler.transform(features_df[numeric_cols])
+    else:
+        scaler = StandardScaler()
+        features_df[numeric_cols] = scaler.fit_transform(features_df[numeric_cols])
 
     features_df.to_csv(output_path, index=False)
     print(f"Extracted features saved to: {output_path}")
+
+    return scaler
 
 
 def main(img_dir, all_images_csv="data/filtering/all_images.csv",
