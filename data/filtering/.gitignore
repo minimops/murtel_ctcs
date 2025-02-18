@@ -1,0 +1,4 @@
+*
+!.gitignore
+!labeled_images_rgb.csv
+!labeled_images_tir.csv
