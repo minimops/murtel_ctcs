@@ -1,0 +1,6 @@
+*
+!align_test_dirs/*/rgb
+!align_test_dirs/*/tir
+!align_test_dirs/*/rgb/*
+!align_test_dirs/*/tir/*
+!.gitignore
