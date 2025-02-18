@@ -1,10 +1,6 @@
 import cv2
 import numpy as np
-import pandas as pd
-from scipy.signal.windows import gaussian
-from skimage import filters, feature, exposure
 from scipy.stats import skew, kurtosis
-from matplotlib import pyplot as plt
 
 """
 Image feature extraction functions to be used for image weather filtering with Svm or RF.
