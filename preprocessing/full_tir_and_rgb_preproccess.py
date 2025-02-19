@@ -7,7 +7,11 @@ import argparse
 Script to compress, filter, and optionally mask TIR and RGB images.
 
 Usage Example:
-    python script.py fullmix --data_dir ../data/align_test_dirs --do_rgb --do_tir
+    python full_tir_and_rgb_proproccess.py \
+    fullmix \
+    --data_dir ../data/align_test_dirs \
+    --do_rgb \
+    --do_tir
 """
 
 def invert_image(image):
