@@ -130,5 +130,3 @@ The directory `aligning` also includes visualization code for SuperGlue operatio
 - Special thanks goes out to the Project Partners Dr. Dominik Amschwand and Prof. Jan Beutel.
 
 ---
-
-## Contact
