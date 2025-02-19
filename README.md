@@ -30,7 +30,7 @@ Below are sample commands for each key functionality:
 Trains an svm using labeled data:
 ```bash
 python weather_filter/rgb_filter_model_training.py \
-        data/RGB_images \
+        ../RGB_images \
         data/filtering/rgb_labels.csv \
         --extracted_features data/filtering/all_extracted_features.csv \
         --train_features data/filtering/train_extracted_features.csv \
@@ -76,9 +76,11 @@ For classification on unlabeled TIR data:
 ## 2. Preprocessing
 
 **Full Preprocess** example:
+Ensure to have a `data_dir/scenario` in which `rgb` and `tir` dirs are filled with the respective parts of image pairs.
+
 ```bash
 python preprocessing/full_tir_and_rgb_proproccess.py \
-        fullmix \
+        scenario \
         --data_dir ../data/align_test_dirs \
         --do_rgb \
         --do_tir
@@ -91,6 +93,7 @@ Several different strategies are available)
 ## 3. Alignment
 
 **SuperGlue Workflow** (align a directory of images to the first as reference):
+Ensure to have added the SuperPoint and SuperGlue models.
 ```bash
 python aligning/superglue_workflow.py \
         data/align_test_dirs/fullmix \

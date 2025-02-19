@@ -156,6 +156,12 @@ if __name__ == "__main__":
         help="Choose which model to train: 'rf' or 'svm' (default: svm)."
     )
     parser.add_argument(
+        "--model_dir",
+        type=str,
+        default="data/filtering",
+        help="Where to save the model and scaler."
+    )
+    parser.add_argument(
         "--re_extract",
         action="store_true",
         default=False,
@@ -173,5 +179,6 @@ if __name__ == "__main__":
         train_csv=args.train_csv,
         test_csv=args.test_csv,
         model=args.model,
+        model_dir=args.model_dir,
         re_extract=args.re_extract
     )
