@@ -16,11 +16,7 @@ A suite of scripts to process and analyze **Murtel Rock Glacier** images, focusi
    pip install -r requirements.txt
    ```
 3. **Add SuperGlue Model**:
-
-Place the `models` directory from [magicleap]{https://github.com/magicleap/SuperGluePretrainedNetwork} into `aligning` directory
-in order for the rgb aligning to work.
-
-Make sure to adhere to their License.
+   Place the `models` directory from [magicleap](https://github.com/magicleap/SuperGluePretrainedNetwork) into `aligning` directory in order for the rgb aligning to work. Make sure to adhere to their License.
 
 ---
 
@@ -31,7 +27,7 @@ Below are sample commands for each key functionality:
 ### 1. Filtering
 
 #### a) RGB Filter
-Trains an svm using labels:
+Trains an svm using labeled data:
 ```bash
 python weather_filter/rgb_filter_model_training.py \
         data/RGB_images \
@@ -45,7 +41,7 @@ python weather_filter/rgb_filter_model_training.py \
         --model_dir data/filtering \
         --re_extract
 ```
-(This orchestrates feature extraction, splitting, and model training.)
+(This orchestrates feature extraction, splitting, model training and testing.)
 
 To predict unlabeled data:
 ```bash
@@ -57,7 +53,7 @@ python weather_filter/rgb_filtering.py \
 ```
 
 #### b) TIR Filter
-Trains a threshold-based classifier on TIR images:
+Trains a threshold entropy-based classifier on TIR images:
 ```bash
 python weather_filter/tir_filter_train.py \
         data/TIR_images \
@@ -73,7 +69,6 @@ For classification on unlabeled TIR data:
     python weather_filter/tir_filtering.py \
         data/TIR_images \
         data/filtering/tir_entropy_threshold.joblib
-
 ```
 
 ---
@@ -123,6 +118,8 @@ python tir_matching/xcorr_rgbtir.py \
 In the `utils` dir, bash helper scripts for image pairing and gif creation is found.
 
 Labeling Helpers are in `labelers`. Some legacy code in `trial_code`.
+
+The directory `aligning` also includes visualization code for SuperGlue operations as well as surface movement estimation.
 
 ---
 
